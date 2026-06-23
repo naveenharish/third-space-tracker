@@ -1,37 +1,48 @@
-Third Space Tracker (tentative claude generated readme)
+# Third Space Tracker (tentative claude generated)
 
 A web app for finding, saving, and ranking "third spaces" — cafes, libraries, parks, coworking spots, and anywhere else you go to work, read, or socialize that isn't home or the office.
 
+---
 
-Problem
+## Problem
 
 Moving to a new city and finding good spots is tedious. Search results are generic, reviews don't tell you what you actually want to know (is it quiet? good wifi? can you stay for 3 hours?), and there's no way to build a personal ranked list across different platforms.
 
-Solution
+## Solution
 
 Aggregate place data from free APIs, let users filter by what actually matters, and build a personal profile of saved and ranked spots.
 
+---
 
-Tech Stack
+## Tech Stack
 
-LayerChoiceWhyFrontendReact (Vite)Component-driven, good map library supportMappingLeaflet.js + OpenStreetMapCompletely free, no billing requiredBackendFastAPI (Python)Modern, async-friendly, auto-generates API docsDatabasePostgreSQL + PostGISNative geo queries (ST_DWithin, radius search)DB HostingSupabase (free tier)Managed Postgres, free, includes auth optionsBackend DeployRender (free tier)Simple deploys, free for personal projectsFrontend DeployVercelGenuinely free for personal projects
+| Layer | Choice | Why |
+|---|---|---|
+| Frontend | React (Vite) | Component-driven, good map library support |
+| Mapping | Leaflet.js + OpenStreetMap | Completely free, no billing required |
+| Backend | FastAPI (Python) | Modern, async-friendly, auto-generates API docs |
+| Database | PostgreSQL + PostGIS | Native geo queries (`ST_DWithin`, radius search) |
+| DB Hosting | Supabase (free tier) | Managed Postgres, free, includes auth options |
+| Backend Deploy | Render (free tier) | Simple deploys, free for personal projects |
+| Frontend Deploy | Vercel | Genuinely free for personal projects |
 
-No credit card required for any of the above.
+**No credit card required for any of the above.**
 
+---
 
-Data Sources
+## Data Sources
 
 All free, no billing account needed:
 
+- **Overpass API** (OpenStreetMap) — primary source for cafes, libraries, parks, coworking spaces
+- **Foursquare Places API** — supplementary place data, 1,000 calls/day free
+- **Yelp Fusion API** — reviews and hours, 500 calls/day free
 
-Overpass API (OpenStreetMap) — primary source for cafes, libraries, parks, coworking spaces
-Foursquare Places API — supplementary place data, 1,000 calls/day free
-Yelp Fusion API — reviews and hours, 500 calls/day free
+---
 
+## Architecture
 
-
-Architecture
-
+```
 Browser
   ├── React App (Vite + React Router)
   ├── Map View (Leaflet + OSM tiles)
@@ -44,26 +55,28 @@ Browser
   │                        ──► Yelp Fusion API
   └── PostgreSQL (PostGIS)
         └── Users, SavedPlaces, Ratings, Lists
+```
 
-The Places Aggregator is the core piece — it fans out to external APIs, deduplicates results (same cafe showing up in multiple sources), and normalizes everything into a consistent schema before storing or returning it.
+The **Places Aggregator** is the core piece — it fans out to external APIs, deduplicates results (same cafe showing up in multiple sources), and normalizes everything into a consistent schema before storing or returning it.
 
+---
 
-Core Features (Planned)
+## Core Features (Planned)
 
+- [ ] Search by location (lat/lng radius) with map and list views
+- [ ] Filter by type (cafe, library, park, coworking, bar)
+- [ ] Filter by amenities (wifi, noise level, hours, seating)
+- [ ] Save spots to a personal profile
+- [ ] Rate and add notes to saved spots
+- [ ] Create named lists ("Focus spots", "Socialize", "Reading")
+- [ ] User auth (register / login)
 
- Search by location (lat/lng radius) with map and list views
- Filter by type (cafe, library, park, coworking, bar)
- Filter by amenities (wifi, noise level, hours, seating)
- Save spots to a personal profile
- Rate and add notes to saved spots
- Create named lists ("Focus spots", "Socialize", "Reading")
- User auth (register / login)
+---
 
+## Data Model
 
-
-Data Model
-
-sql-- Places discovered from external APIs
+```sql
+-- Places discovered from external APIs
 Place (
   id, name, type,
   lat, lng,           -- PostGIS POINT geometry
@@ -86,10 +99,13 @@ SavedPlace (
 
 -- Named collections
 List (id, user_id, name, place_ids)
+```
 
+---
 
-Project Structure (Planned)
+## Project Structure (Planned)
 
+```
 third-space-tracker/
 ├── frontend/               # React (Vite)
 │   ├── src/
@@ -113,21 +129,22 @@ third-space-tracker/
 │   └── requirements.txt
 │
 └── README.md
+```
 
+---
 
-Getting Started (Local Dev)
+## Getting Started (Local Dev)
 
-Prerequisites
+### Prerequisites
 
+- Python 3.11+
+- Node 18+
+- PostgreSQL with PostGIS extension (or a Supabase project)
 
-Python 3.11+
-Node 18+
-PostgreSQL with PostGIS extension (or a Supabase project)
+### Backend
 
-
-Backend
-
-bashcd backend
+```bash
+cd backend
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -138,32 +155,38 @@ cp .env.example .env
 
 uvicorn app.main:app --reload
 # API docs at http://localhost:8000/docs
+```
 
-Frontend
+### Frontend
 
-bashcd frontend
+```bash
+cd frontend
 npm install
 npm run dev
 # App at http://localhost:5173
+```
 
+---
 
-API Keys Needed
+## API Keys Needed
 
-ServiceWhere to getFree limitFoursquarefoursquare.com/developer1,000 req/dayYelpyelp.com/developers500 req/dayOverpassNo key neededRate limited by fair use
+| Service | Where to get | Free limit |
+|---|---|---|
+| Foursquare | [foursquare.com/developer](https://foursquare.com/developer) | 1,000 req/day |
+| Yelp | [yelp.com/developers](https://www.yelp.com/developers) | 500 req/day |
+| Overpass | No key needed | Rate limited by fair use |
 
+---
 
-Build Order
+## Build Order
 
-
-FastAPI skeleton + DB connection + PostGIS setup
-Overpass API integration — search cafes/libraries by lat/lng
-React app + Leaflet map — display pins from API
-Foursquare + Yelp integration + aggregator deduplication
-Auth (register/login, JWT)
-Save/unsave spots to profile
-Personal ratings + notes
-Filters (type, amenities, hours)
-Lists feature
-Deploy (Vercel + Render + Supabase)
-
-Progress1 of 1Write README.md for Third Space TrackerThird space trackerInstructions · CLAUDE.mdREADME.mdContextTrack tools and referenced files used in this task.
+1. FastAPI skeleton + DB connection + PostGIS setup
+2. Overpass API integration — search cafes/libraries by lat/lng
+3. React app + Leaflet map — display pins from API
+4. Foursquare + Yelp integration + aggregator deduplication
+5. Auth (register/login, JWT)
+6. Save/unsave spots to profile
+7. Personal ratings + notes
+8. Filters (type, amenities, hours)
+9. Lists feature
+10. Deploy (Vercel + Render + Supabase)
