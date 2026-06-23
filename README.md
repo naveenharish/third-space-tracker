@@ -1,4 +1,4 @@
-Third Space Tracker
+Third Space Tracker (tentative claude generated readme)
 
 A web app for finding, saving, and ranking "third spaces" — cafes, libraries, parks, coworking spots, and anywhere else you go to work, read, or socialize that isn't home or the office.
 
